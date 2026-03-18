@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A'01 Negocios – Inteligência MUD | Teste de Maturidade Empresarial</title>
+  <meta name="description" content="Diagnostico estrategico desenvolvido pela A'01 Negocios. Descubra o nivel de gestao da sua empresa em 10 minutos com o Inteligencia MUD.">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: hsl(220, 20%, 97%);
+      --fg: hsl(220, 30%, 12%);
+      --card: #fff;
+      --card-fg: hsl(220, 30%, 12%);
+      --muted: hsl(220, 15%, 92%);
+      --muted-fg: hsl(220, 10%, 45%);
+      --border: hsl(220, 15%, 88%);
+      --input: hsl(220, 15%, 88%);
+      --gold: hsl(45, 60%, 55%);
+      --gold-light: hsl(45, 60%, 75%);
+      --gold-dark: hsl(45, 55%, 40%);
+      --navy: hsl(220, 40%, 18%);
+      --navy-light: hsl(220, 30%, 28%);
+      --radius: 0.75rem;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── LANDING PAGE ── */
+    .landing-hero {
+      background: linear-gradient(160deg, hsl(220, 35%, 22%) 0%, hsl(220, 40%, 14%) 50%, hsl(220, 45%, 10%) 100%);
+      color: #fff;
+      text-align: center;
+      padding: 80px 24px 72px;
+    }
+
+    .landing-hero .brand {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+    }
+
+    .landing-hero .brand-sub {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .landing-hero h1 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 860px;
+      margin: 0 auto 28px;
+      color: var(--gold-light);
+    }
+
+    .landing-hero h1 span {
+      color: var(--gold);
+    }
+
+    .landing-hero p {
+      color: var(--gold-light);
+      opacity: 0.6;
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 16px;
+    }
+
+    .landing-hero .tagline {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 640px) {
+      .landing-hero h1 { font-size: 28px; }
+      .landing-hero { padding: 48px 16px 44px; }
+      .landing-hero p { font-size: 15px; }
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .landing-section {
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .landing-section h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 8px;
+    }
+
+    .landing-section .section-desc {
+      color: var(--muted-fg);
+      font-size: 14px;
+      margin-bottom: 36px;
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .how-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .how-card .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 20px;
+    }
+
+    .how-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .how-card p {
+      font-size: 13px;
+      color: var(--muted-fg);
+      line-height: 1.5;
+    }
+
+    /* Pillars section */
+    .pillars-section {
+      background: hsl(220, 15%, 92%);
+      padding: 56px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .pillars-section h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 28px;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .pillar-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .pillar-card .pillar-icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 10px;
+      background: var(--navy);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pillar-card .pillar-icon i,
+    .pillar-card .pillar-icon svg {
+      color: var(--gold-light) !important;
+      stroke: var(--gold-light) !important;
+    }
+
+    .pillar-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 4px;
+    }
+
+    .pillar-card p {
+      font-size: 12px;
+      color: var(--muted-fg);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+      .pillars-grid { grid-template-columns: 1fr; }
+    }
+
+    .landing-cta {
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .landing-footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+    }
+
+    .landing-footer .footer-brand {
+      color: var(--gold-light);
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .landing-footer .footer-sub {
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    /* ── FORM PAGES ── */
+    .form-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 24px;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .form-header .header-icon {
+      font-size: 18px;
+    }
+
+    .form-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .form-card h3 {
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .form-card .form-subtitle {
+      text-align: center;
+      color: var(--muted-fg);
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .field {
+      margin-bottom: 22px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--fg);
+    }
+
+    .field input[type="text"],
+    .field input[type="email"],
+    .field select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      padding: 10px 2px;
+      color: var(--fg);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .field select {
+      background-color: var(--card);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding: 12px 32px 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .field input:focus, .field select:focus {
+      border-bottom-color: var(--gold);
+    }
+
+    .field input::placeholder { color: var(--muted-fg); }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-option {
+      display: flex !important;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 0;
+    }
+
+    .radio-option:hover { border-color: hsl(220, 15%, 78%); }
+    .radio-option.selected { border-color: var(--navy); }
+
+    .radio-option input[type="radio"] { display: none; }
+
+    .radio-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid hsl(220, 10%, 75%);
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+
+    .radio-option:hover .radio-dot { border-color: hsl(220, 15%, 60%); }
+
+    .radio-option.selected .radio-dot {
+      border-color: var(--navy);
+      border-width: 6px;
+    }
+
+    .radio-option span {
+      font-size: 15px;
+      color: var(--fg);
+    }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 12px;
+      margin-bottom: 24px;
+    }
+
+    .consent input[type="checkbox"] {
+      margin-top: 2px;
+      accent-color: var(--navy);
+      flex-shrink: 0;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+
+    .consent label {
+      font-size: 12px;
+      color: var(--muted-fg);
+      font-weight: 400;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:hover { opacity: 0.88; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--fg);
+      width: 100%;
+      padding: 14px;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--navy);
+    }
+
+    .btn-full { width: 100%; padding: 14px; }
+
+    /* Progress */
+    .progress-section {
+      width: 100%;
+      max-width: 620px;
+      margin-bottom: 28px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted-fg);
+      margin-bottom: 6px;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--muted);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    /* Quiz cards */
+    .quiz-container {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .quiz-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .quiz-card .pillar-badge {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .quiz-card .question {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--fg);
+      margin-bottom: 20px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .slider-row .bound {
+      font-size: 13px;
+      color: var(--muted-fg);
+      flex-shrink: 0;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 8px;
+      appearance: none;
+      background: var(--muted);
+      border-radius: 99px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--navy);
+      border: 3px solid #fff;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .score-display {
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    .score-display .big-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .score-display .of-ten {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--muted-fg);
+    }
+
+    .quiz-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 620px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    /* ── RESULTS ── */
+    .results-container {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .results-header .header-icon { font-size: 18px; }
+
+    .results-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+
+    .result-score-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .result-score-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted-fg);
+      margin-bottom: 16px;
+    }
+
+    .big-score {
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--fg);
+      line-height: 1;
+    }
+
+    .maturity-label {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted-fg);
+    }
+
+    .maturity-label strong {
+      color: var(--fg);
+      font-size: 16px;
+    }
+
+    /* Pillar scores in results */
+    .result-pillars-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .result-pillars-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted-fg);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .pillar-score-grid {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .pillar-score-item {
+      text-align: center;
+    }
+
+    .pillar-score-item .score-circle-sm {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 6px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--fg);
+    }
+
+    .pillar-score-item .pillar-name-sm {
+      font-size: 11px;
+      color: var(--muted-fg);
+    }
+
+    /* Benchmark */
+    .benchmark-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .benchmark-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .benchmark-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .benchmark-item {
+      text-align: center;
+    }
+
+    .benchmark-item .bench-label {
+      font-size: 12px;
+      color: var(--muted-fg);
+      margin-bottom: 4px;
+    }
+
+    .benchmark-item .bench-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--fg);
+    }
+
+    .benchmark-status {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted-fg);
+    }
+
+    .benchmark-status strong {
+      color: #e05252;
+    }
+
+    .benchmark-status strong.above {
+      color: hsl(150, 60%, 40%);
+    }
+
+    /* Analysis columns */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .analysis-column {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .analysis-column h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .analysis-column ol {
+      list-style: none;
+      counter-reset: item;
+      padding: 0;
+    }
+
+    .analysis-column ol li {
+      counter-increment: item;
+      font-size: 13px;
+      color: var(--muted-fg);
+      line-height: 1.5;
+      margin-bottom: 10px;
+      padding-left: 24px;
+      position: relative;
+    }
+
+    .analysis-column ol li::before {
+      content: counter(item) ".";
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--fg);
+    }
+
+    /* Summary card */
+    .summary-card {
+      background: hsl(45, 60%, 95%);
+      border: 1px solid hsl(45, 60%, 85%);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card .summary-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin-bottom: 8px;
+    }
+
+    .summary-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 8px;
+    }
+
+    .summary-card p {
+      font-size: 13px;
+      color: var(--muted-fg);
+      line-height: 1.6;
+    }
+
+    /* Action buttons at bottom */
+    .result-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .result-actions .action-left {
+      display: flex;
+      gap: 12px;
+    }
+
+    .result-actions .btn-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted-fg);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 8px 0;
+    }
+
+    .result-actions .btn-action:hover { color: var(--fg); }
+
+    .error-msg {
+      color: hsl(0, 84%, 60%);
+      font-size: 12px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    /* Scroll animations */
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: translateY(24px); }
+      70% { opacity: 1; transform: translateY(-3px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    .animate-on-scroll.animated {
+      animation: bounceIn 0.6s ease-out forwards;
+    }
+
+    .animate-on-scroll.delay-1 { animation-delay: 0.1s; }
+    .animate-on-scroll.delay-2 { animation-delay: 0.2s; }
+    .animate-on-scroll.delay-3 { animation-delay: 0.3s; }
+    .animate-on-scroll.delay-4 { animation-delay: 0.4s; }
+    .animate-on-scroll.delay-5 { animation-delay: 0.5s; }
+    .animate-on-scroll.delay-6 { animation-delay: 0.6s; }
+
+    /* Hero entrance */
+    @keyframes heroFadeIn {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .landing-hero {
+      animation: heroFadeIn 1.2s ease-out forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .landing-hero h1 { font-size: 24px; }
+      .landing-hero { padding: 40px 16px 36px; }
+      .form-card { padding: 24px 20px; }
+      .quiz-card { padding: 20px 16px; }
+      .analysis-grid { grid-template-columns: 1fr; }
+      .benchmark-grid { grid-template-columns: 1fr 1fr; }
+      .result-actions { flex-direction: column; align-items: stretch; }
+      .result-actions .action-left { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- PAGE 0: LANDING                             -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page active" id="page-landing">
+
+  <div class="landing-hero">
+    <div class="brand">A'01 Negocios</div>
+    <div class="brand-sub"><i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i> Inteligencia MUD</div>
+    <h1>Descubra o nivel de gestao da sua empresa em <span>10 minutos</span></h1>
+    <p>O Teste de Maturidade Empresarial MUD analisa os principais pilares da gestao empresarial e mostra onde sua empresa perde dinheiro, tempo e potencial de crescimento.</p>
+    <p class="tagline">Diagnostico estrategico desenvolvido pela A'01 Negocios, consultoria especializada em gestao empresarial.</p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" style="width:auto; padding:16px 48px; font-size:16px; border-radius:10px;" onclick="goPage('cadastro')">Iniciar Diagnostico</button>
+      <button class="btn-ghost" style="padding:16px 40px; font-size:16px; border-radius:10px;" onclick="showExampleResult()">Ver Exemplo de Resultado</button>
+    </div>
+  </div>
+
+  <div class="landing-section">
+    <h2>Como funciona o diagnostico?</h2>
+    <p class="section-desc">Um teste rapido e estrategico para entender a maturidade da gestao do seu negocio.</p>
+    <div class="how-grid">
+      <div class="how-card animate-on-scroll">
+        <div class="icon"><i data-lucide="clock" style="width:22px;height:22px;color:var(--navy);"></i></div>
+        <h3>10 minutos</h3>
+        <p>Responda perguntas simples sobre os 7 pilares da sua empresa.</p>
+      </div>
+      <div class="how-card animate-on-scroll delay-1">
+        <div class="icon"><i data-lucide="bar-chart-3" style="width:22px;height:22px;color:var(--navy);"></i></div>
+        <h3>Pontuacao</h3>
+        <p>Receba uma pontuacao de 0 a 100 e descubra seu nivel de maturidade.</p>
+      </div>
+      <div class="how-card animate-on-scroll delay-2">
+        <div class="icon"><i data-lucide="file-text" style="width:22px;height:22px;color:var(--navy);"></i></div>
+        <h3>Relatorio</h3>
+        <p>Receba analise automatica com gargalos, oportunidades e acoes.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pillars-section">
+    <h2 class="animate-on-scroll">Os 7 Pilares da Gestao Empresarial</h2>
+    <div class="pillars-grid">
+      <div class="pillar-card animate-on-scroll delay-1">
+        <div class="pillar-icon"><i data-lucide="dollar-sign" style="width:20px;height:20px;"></i></div>
+        <div><h4>Financeiro</h4><p>Controle de lucro, custos e fluxo de caixa</p></div>
+      </div>
+      <div class="pillar-card animate-on-scroll delay-2">
+        <div class="pillar-icon"><i data-lucide="shopping-cart" style="width:20px;height:20px;"></i></div>
+        <div><h4>Compras</h4><p>Gestao de fornecedores e negociacao</p></div>
+      </div>
+      <div class="pillar-card animate-on-scroll delay-3">
+        <div class="pillar-icon"><i data-lucide="package" style="width:20px;height:20px;"></i></div>
+        <div><h4>Estoque</h4><p>Giro, controle e previsibilidade</p></div>
+      </div>
+      <div class="pillar-card animate-on-scroll delay-1">
+        <div class="pillar-icon"><i data-lucide="trending-up" style="width:20px;height:20px;"></i></div>
+        <div><h4>Vendas</h4><p>Processo comercial e conversao</p></div>
+      </div>
+      <div class="pillar-card animate-on-scroll delay-2">
+        <div class="pillar-icon"><i data-lucide="megaphone" style="width:20px;height:20px;"></i></div>
+        <div><h4>Marketing</h4><p>Geracao de clientes e posicionamento</p></div>
+      </div>
+      <div class="pillar-card animate-on-scroll delay-3">
+        <div class="pillar-icon"><i data-lucide="users" style="width:20px;height:20px;"></i></div>
+        <div><h4>Pessoas e Lideranca</h4><p>Equipe, cultura e produtividade</p></div>
+      </div>
+      <div class="pillar-card animate-on-scroll delay-1">
+        <div class="pillar-icon"><i data-lucide="brain" style="width:20px;height:20px;"></i></div>
+        <div><h4>Mentalidade e Estrategia</h4><p>Planejamento e visao de crescimento</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-cta">
+    <button class="btn btn-primary animate-on-scroll" onclick="goPage('cadastro')" style="width:auto; padding:14px 40px; font-size:15px;">Iniciar Diagnostico Gratuito</button>
+  </div>
+
+  <div class="landing-footer">
+    <div class="footer-brand">A'01 Negocios</div>
+    <div class="footer-sub">Inteligencia MUD</div>
+    <div>Plataforma de inteligencia em gestao criada pela A'01 Negocios &copy; 2026</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- PAGE 1: REGISTRATION                        -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-cadastro">
+  <div class="form-page">
+    <div class="form-header">
+      <i data-lucide="bar-chart-3" style="width:18px;height:18px;color:var(--gold);"></i>
+      <h2>Inteligencia MUD</h2>
+    </div>
+    <div class="form-card">
+      <h3>Cadastro</h3>
+      <p class="form-subtitle">Preencha seus dados para iniciar o diagnostico</p>
+
+      <div class="field">
+        <label>Nome *</label>
+        <input type="text" id="nome" placeholder="Seu nome completo">
+      </div>
+      <div class="field">
+        <label>Email *</label>
+        <input type="email" id="email" placeholder="seu@email.com">
+      </div>
+      <div class="field">
+        <label>WhatsApp *</label>
+        <input type="text" id="whatsapp" placeholder="(00) 00000-0000">
+      </div>
+      <div class="field">
+        <label>Empresa *</label>
+        <input type="text" id="empresa" placeholder="Nome da empresa">
+      </div>
+      <div class="field">
+        <label>Setor da empresa</label>
+        <input type="text" id="setor" placeholder="Ex: Varejo, Servicos, Industria">
+      </div>
+      <div class="field">
+        <label>Faturamento medio mensal *</label>
+        <select id="faturamento">
+          <option value="" disabled selected>Selecione</option>
+          <option value="Ate R$ 50 mil">Ate R$ 50 mil</option>
+          <option value="R$ 50 mil a R$ 200 mil">R$ 50 mil a R$ 200 mil</option>
+          <option value="R$ 200 mil a R$ 1 milhao">R$ 200 mil a R$ 1 milhao</option>
+          <option value="Acima de R$ 1 milhao">Acima de R$ 1 milhao</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Numero de colaboradores *</label>
+        <select id="colaboradores">
+          <option value="" disabled selected>Selecione</option>
+          <option value="1 a 3">1 a 3</option>
+          <option value="4 a 10">4 a 10</option>
+          <option value="11 a 30">11 a 30</option>
+          <option value="31+">31+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Qual e o maior desafio da sua empresa? *</label>
+        <div class="radio-group" id="desafio-group">
+          <label class="radio-option" onclick="selectRadio(this, 'Aumentar vendas')">
+            <input type="radio" name="desafio"><div class="radio-dot"></div><span>Aumentar vendas</span>
+          </label>
+          <label class="radio-option" onclick="selectRadio(this, 'Organizar gestao financeira')">
+            <input type="radio" name="desafio"><div class="radio-dot"></div><span>Organizar gestao financeira</span>
+          </label>
+          <label class="radio-option" onclick="selectRadio(this, 'Estruturar equipe')">
+            <input type="radio" name="desafio"><div class="radio-dot"></div><span>Estruturar equipe</span>
+          </label>
+          <label class="radio-option" onclick="selectRadio(this, 'Melhorar marketing')">
+            <input type="radio" name="desafio"><div class="radio-dot"></div><span>Melhorar marketing</span>
+          </label>
+          <label class="radio-option" onclick="selectRadio(this, 'Crescer de forma organizada')">
+            <input type="radio" name="desafio"><div class="radio-dot"></div><span>Crescer de forma organizada</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="lgpd">
+        <label for="lgpd">Concordo com a coleta e uso dos meus dados pela A'01 Negocios para fins de diagnostico e contato comercial, conforme a LGPD (Lei no 13.709/2018). Meus dados nao serao compartilhados com terceiros.</label>
+      </div>
+
+      <p class="error-msg" id="err-1">Por favor, preencha todos os campos obrigatorios e aceite os termos.</p>
+      <button class="btn btn-primary btn-full" onclick="submitRegistration()">Iniciar Diagnostico</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- PAGE 2: QUIZ PART 1                         -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-quiz1">
+  <div class="form-page">
+    <div class="form-header">
+      <i data-lucide="bar-chart-3" style="width:18px;height:18px;color:var(--gold);"></i>
+      <h2>Diagnostico &ndash; Parte 1</h2>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-labels">
+        <span>Pergunta 1 de 2</span>
+        <span>50%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:50%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-container">
+      <div class="quiz-card">
+        <div class="pillar-badge">Financeiro</div>
+        <div class="question">A empresa acompanha a margem de lucro mensal?</div>
+        <div class="slider-row">
+          <span class="bound">0</span>
+          <input type="range" min="0" max="10" value="0" id="slider-financeiro" oninput="updateSlider('financeiro')">
+          <span class="bound">10</span>
+        </div>
+        <div class="score-display"><span class="big-num" id="val-financeiro">0</span><span class="of-ten"> /10</span></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="pillar-badge">Compras</div>
+        <div class="question">Existe comparacao estruturada entre fornecedores antes de comprar?</div>
+        <div class="slider-row">
+          <span class="bound">0</span>
+          <input type="range" min="0" max="10" value="0" id="slider-compras" oninput="updateSlider('compras')">
+          <span class="bound">10</span>
+        </div>
+        <div class="score-display"><span class="big-num" id="val-compras">0</span><span class="of-ten"> /10</span></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="pillar-badge">Estoque</div>
+        <div class="question">Existe controle de giro de estoque ou previsibilidade de reposicao?</div>
+        <div class="slider-row">
+          <span class="bound">0</span>
+          <input type="range" min="0" max="10" value="0" id="slider-estoque" oninput="updateSlider('estoque')">
+          <span class="bound">10</span>
+        </div>
+        <div class="score-display"><span class="big-num" id="val-estoque">0</span><span class="of-ten"> /10</span></div>
+      </div>
+    </div>
+
+    <div class="quiz-buttons">
+      <button class="btn btn-outline" onclick="goPage('cadastro')">Voltar</button>
+      <button class="btn btn-primary" style="width:auto; padding:12px 40px;" onclick="goPage('quiz2')">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- PAGE 3: QUIZ PART 2                         -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-quiz2">
+  <div class="form-page">
+    <div class="form-header">
+      <i data-lucide="bar-chart-3" style="width:18px;height:18px;color:var(--gold);"></i>
+      <h2>Diagnostico &ndash; Parte 2</h2>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-labels">
+        <span>Pergunta 2 de 2</span>
+        <span>100%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:100%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-container">
+      <div class="quiz-card">
+        <div class="pillar-badge">Vendas</div>
+        <div class="question">Existe processo comercial estruturado?</div>
+        <div class="slider-row">
+          <span class="bound">0</span>
+          <input type="range" min="0" max="10" value="0" id="slider-vendas" oninput="updateSlider('vendas')">
+          <span class="bound">10</span>
+        </div>
+        <div class="score-display"><span class="big-num" id="val-vendas">0</span><span class="of-ten"> /10</span></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="pillar-badge">Marketing</div>
+        <div class="question">Existe geracao constante de novos clientes?</div>
+        <div class="slider-row">
+          <span class="bound">0</span>
+          <input type="range" min="0" max="10" value="0" id="slider-marketing" oninput="updateSlider('marketing')">
+          <span class="bound">10</span>
+        </div>
+        <div class="score-display"><span class="big-num" id="val-marketing">0</span><span class="of-ten"> /10</span></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="pillar-badge">Pessoas</div>
+        <div class="question">Funcoes e responsabilidades da equipe sao claras?</div>
+        <div class="slider-row">
+          <span class="bound">0</span>
+          <input type="range" min="0" max="10" value="0" id="slider-pessoas" oninput="updateSlider('pessoas')">
+          <span class="bound">10</span>
+        </div>
+        <div class="score-display"><span class="big-num" id="val-pessoas">0</span><span class="of-ten"> /10</span></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="pillar-badge">Mentalidade</div>
+        <div class="question">Existe planejamento estrategico para crescimento?</div>
+        <div class="slider-row">
+          <span class="bound">0</span>
+          <input type="range" min="0" max="10" value="0" id="slider-mentalidade" oninput="updateSlider('mentalidade')">
+          <span class="bound">10</span>
+        </div>
+        <div class="score-display"><span class="big-num" id="val-mentalidade">0</span><span class="of-ten"> /10</span></div>
+      </div>
+    </div>
+
+    <div class="quiz-buttons">
+      <button class="btn btn-outline" onclick="goPage('quiz1')">Voltar</button>
+      <button class="btn btn-primary" style="width:auto; padding:12px 40px;" onclick="showResults()">Ver Resultado</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- PAGE 4: RESULTS                              -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-resultado">
+  <div class="results-container">
+    <div class="results-header">
+      <i data-lucide="bar-chart-3" style="width:18px;height:18px;color:var(--gold);"></i>
+      <h2>Resultado do Diagnostico</h2>
+    </div>
+
+    <div class="result-score-card">
+      <h3>Pontuacao Geral da Empresa</h3>
+      <div class="big-score" id="total-score">0</div>
+      <div class="maturity-label">
+        Nivel de Maturidade:<br>
+        <strong id="maturity-level">--</strong>
+      </div>
+    </div>
+
+    <div class="result-pillars-card">
+      <h3>Pontuacao por Pilar</h3>
+      <div class="pillar-score-grid" id="pillar-scores"></div>
+    </div>
+
+    <div class="benchmark-card">
+      <h3><i data-lucide="bar-chart-3" style="width:18px;height:18px;"></i> Benchmark Empresarial</h3>
+      <div class="benchmark-grid">
+        <div class="benchmark-item">
+          <div class="bench-label">Media do mercado</div>
+          <div class="bench-value">45</div>
+        </div>
+        <div class="benchmark-item">
+          <div class="bench-label">Sua pontuacao</div>
+          <div class="bench-value" id="bench-score">0</div>
+        </div>
+      </div>
+      <div class="benchmark-status" id="bench-status"></div>
+    </div>
+
+    <div class="analysis-grid" id="analysis-grid"></div>
+
+    <div class="summary-card">
+      <div class="summary-label">Analise da empresa realizada pela inteligencia MUD</div>
+      <h4>Resumo Estrategico MUD</h4>
+      <p id="summary-text"></p>
+    </div>
+
+    <div class="result-actions">
+      <div class="action-left">
+        <button class="btn-action" onclick="shareWhatsApp()"><i data-lucide="share-2" style="width:14px;height:14px;"></i> Compartilhar Resultado</button>
+        <button class="btn-action" onclick="downloadPDF()"><i data-lucide="download" style="width:14px;height:14px;"></i> Baixar Relatorio</button>
+      </div>
+      <a href="https://wa.me/5517991628426?text=Ol%C3%A1%2C%20gostaria%20de%20melhorar%20a%20minha%20empresa." target="_blank">
+        <button class="btn btn-primary" style="width:auto; padding:12px 28px;"><i data-lucide="rocket" style="width:16px;height:16px;display:inline;vertical-align:middle;margin-right:4px;"></i> Melhorar Pontuacao</button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────
+  const SHEETS_URL = 'COLE_A_URL_DO_APPS_SCRIPT_AQUI';
+  // ────────────────────────────────────────────────────────
+
+  const scores = { financeiro:0, compras:0, estoque:0, vendas:0, marketing:0, pessoas:0, mentalidade:0 };
+  let registration = {};
+  let selectedDesafio = '';
+
+  const pillarLabels = {
+    financeiro:'Financeiro', compras:'Compras', estoque:'Estoque',
+    vendas:'Vendas', marketing:'Marketing', pessoas:'Pessoas', mentalidade:'Mentalidade'
+  };
+
+  const gargalosMap = {
+    financeiro:'Falta de controle financeiro compromete a lucratividade e a tomada de decisoes.',
+    compras:'Processo de compras desorganizado gera desperdicio e custos elevados.',
+    estoque:'Gestao de estoque ineficiente causa rupturas e capital parado.',
+    vendas:'Ausencia de processo comercial limita o crescimento de receita.',
+    marketing:'Geracao de clientes inconsistente reduz a previsibilidade de faturamento.',
+    pessoas:'Falta de clareza de papeis compromete a produtividade da equipe.',
+    mentalidade:'Ausencia de planejamento estrategico limita o potencial de crescimento.'
+  };
+
+  const oportunidadesMap = {
+    financeiro:'Implementar gestao financeira pode aumentar a margem de lucro em ate 30%.',
+    compras:'Estruturar compras pode reduzir custos operacionais significativamente.',
+    estoque:'Otimizar estoque libera capital e melhora o fluxo de caixa.',
+    vendas:'Estruturar vendas pode acelerar o crescimento de receita.',
+    marketing:'Geracao previsivel de clientes estabiliza o faturamento.',
+    pessoas:'Equipe alinhada entrega mais com menos conflito.',
+    mentalidade:'Planejamento claro reduz decisoes reativas e aumenta a margem.'
+  };
+
+  const acoesMap = {
+    financeiro:'Implementar DRE mensal e acompanhamento de margem de contribuicao.',
+    compras:'Criar processo de cotacao com minimo 3 fornecedores por compra.',
+    estoque:'Adotar sistema de controle de giro e ponto de reposicao.',
+    vendas:'Estruturar funil de vendas com etapas e metas claras.',
+    marketing:'Criar calendario de marketing com acoes de geracao de leads.',
+    pessoas:'Definir organograma, cargos e indicadores de desempenho.',
+    mentalidade:'Definir metas anuais e indicadores chave de crescimento.'
+  };
+
+  function maturityLevel(score) {
+    if (score <= 20) return 'Sobrevivencia';
+    if (score <= 40) return 'Desorganizacao';
+    if (score <= 60) return 'Organizacao';
+    if (score <= 80) return 'Gestao';
+    return 'Escala';
+  }
+
+  function goPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+    lucide.createIcons();
+  }
+
+  function selectRadio(el, value) {
+    document.querySelectorAll('#desafio-group .radio-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDesafio = value;
+  }
+
+  function updateSlider(pillar) {
+    const val = document.getElementById('slider-' + pillar).value;
+    document.getElementById('val-' + pillar).textContent = val;
+    scores[pillar] = parseInt(val);
+  }
+
+  function formatWhatsApp(input) {
+    let digits = input.value.replace(/\D/g, '');
+    if (digits.length > 11) digits = digits.slice(0, 11);
+    let formatted = '';
+    if (digits.length > 0) formatted = '(' + digits.slice(0, 2);
+    if (digits.length >= 2) formatted += ') ';
+    if (digits.length >= 3) formatted += digits.slice(2, digits.length > 10 ? 7 : 6);
+    if ((digits.length > 10 && digits.length > 7) || (digits.length <= 10 && digits.length > 6))
+      formatted += '-' + digits.slice(digits.length > 10 ? 7 : 6);
+    input.value = formatted;
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function isValidWhatsApp(val) {
+    const digits = val.replace(/\D/g, '');
+    return digits.length === 10 || digits.length === 11;
+  }
+
+  // Attach formatter to WhatsApp input
+  document.getElementById('whatsapp').addEventListener('input', function() { formatWhatsApp(this); });
+
+  // Real-time validation on blur
+  function showFieldError(input, msg) {
+    clearFieldError(input);
+    const el = document.createElement('div');
+    el.className = 'field-error';
+    el.textContent = msg;
+    el.style.cssText = 'color:hsl(0,84%,60%);font-size:12px;margin-top:4px;';
+    input.parentElement.appendChild(el);
+    input.style.borderBottomColor = 'hsl(0,84%,60%)';
+  }
+
+  function clearFieldError(input) {
+    const existing = input.parentElement.querySelector('.field-error');
+    if (existing) existing.remove();
+    input.style.borderBottomColor = '';
+  }
+
+  document.getElementById('email').addEventListener('blur', function() {
+    if (this.value.trim() && !isValidEmail(this.value.trim())) {
+      showFieldError(this, 'E-mail invalido. Ex: seu@email.com');
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  document.getElementById('whatsapp').addEventListener('blur', function() {
+    if (this.value.trim() && !isValidWhatsApp(this.value.trim())) {
+      showFieldError(this, 'Numero invalido. Ex: (11) 99999-9999');
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  document.getElementById('email').addEventListener('focus', function() { clearFieldError(this); });
+  document.getElementById('whatsapp').addEventListener('focus', function() { clearFieldError(this); });
+
+  function submitRegistration() {
+    const nome = document.getElementById('nome').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const empresa = document.getElementById('empresa').value.trim();
+    const faturamento = document.getElementById('faturamento').value;
+    const colaboradores = document.getElementById('colaboradores').value;
+    const lgpd = document.getElementById('lgpd').checked;
+    const err = document.getElementById('err-1');
+
+    if (!nome || !email || !whatsapp || !empresa || !faturamento || !colaboradores || !selectedDesafio || !lgpd) {
+      err.textContent = 'Por favor, preencha todos os campos obrigatorios e aceite os termos.';
+      err.style.display = 'block';
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      err.textContent = 'Por favor, insira um e-mail valido.';
+      err.style.display = 'block';
+      return;
+    }
+
+    if (!isValidWhatsApp(whatsapp)) {
+      err.textContent = 'Por favor, insira um numero de WhatsApp valido. Ex: (11) 99999-9999';
+      err.style.display = 'block';
+      return;
+    }
+
+    err.style.display = 'none';
+
+    registration = {
+      nome, email, whatsapp, empresa,
+      setor: document.getElementById('setor').value.trim(),
+      faturamento, colaboradores,
+      desafio: selectedDesafio
+    };
+
+    goPage('quiz1');
+  }
+
+  function showResults() {
+    const total = Math.round(Object.values(scores).reduce((a, b) => a + b, 0) / 7 * 10);
+    const level = maturityLevel(total);
+    const sorted = Object.entries(scores).sort(([,a],[,b]) => a - b).slice(0, 3).map(([k]) => k);
+
+    document.getElementById('total-score').textContent = total;
+    document.getElementById('maturity-level').textContent = level;
+    document.getElementById('bench-score').textContent = total;
+
+    const benchStatus = document.getElementById('bench-status');
+    if (total < 45) {
+      benchStatus.innerHTML = 'Sua empresa esta <strong>abaixo da media</strong> em relacao a empresas do mesmo porte.';
+    } else {
+      benchStatus.innerHTML = 'Sua empresa esta <strong class="above">acima da media</strong> em relacao a empresas do mesmo porte.';
+    }
+
+    // Pillar score circles
+    const pillarEl = document.getElementById('pillar-scores');
+    pillarEl.innerHTML = '';
+    Object.entries(scores).forEach(([key, val]) => {
+      pillarEl.innerHTML += `
+        <div class="pillar-score-item">
+          <div class="score-circle-sm">${val * 10}</div>
+          <div class="pillar-name-sm">${pillarLabels[key]}</div>
+        </div>`;
+    });
+
+    // Analysis grid
+    const grid = document.getElementById('analysis-grid');
+    grid.innerHTML = `
+      <div class="analysis-column">
+        <h4><i data-lucide="alert-triangle" style="width:16px;height:16px;color:var(--gold-dark);"></i> Gargalos</h4>
+        <ol>${sorted.map(k => `<li>${gargalosMap[k]}</li>`).join('')}</ol>
+      </div>
+      <div class="analysis-column">
+        <h4><i data-lucide="lightbulb" style="width:16px;height:16px;color:var(--gold-dark);"></i> Oportunidades</h4>
+        <ol>${sorted.map(k => `<li>${oportunidadesMap[k]}</li>`).join('')}</ol>
+      </div>
+      <div class="analysis-column">
+        <h4><i data-lucide="check-circle" style="width:16px;height:16px;color:hsl(150,60%,40%);"></i> Acoes Prioritarias</h4>
+        <ol>${sorted.map(k => `<li>${acoesMap[k]}</li>`).join('')}</ol>
+      </div>`;
+    // Re-render lucide icons for dynamically added content
+    lucide.createIcons();
+
+    // Summary
+    const summaryPillars = sorted.map(k => pillarLabels[k].toLowerCase()).join(', ');
+    document.getElementById('summary-text').textContent =
+      `Com base no diagnostico realizado, sua empresa apresenta oportunidades claras de melhoria em ${summaryPillars}. Priorize acoes nessas areas para gerar maior previsibilidade de crescimento e melhorar a eficiencia operacional.`;
+
+    // Submit to Google Sheets
+    if (SHEETS_URL !== 'COLE_A_URL_DO_APPS_SCRIPT_AQUI') {
+      fetch(SHEETS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ ...registration, pontuacao: total, nivel: level })
+      }).catch(() => {});
+    }
+
+    goPage('resultado');
+  }
+
+  function shareWhatsApp() {
+    const total = document.getElementById('total-score').textContent;
+    const level = document.getElementById('maturity-level').textContent;
+    const pillarText = Object.entries(scores).map(([k,v]) => `${pillarLabels[k]}: ${v*10}/100`).join('\n');
+    const msg = `*Meu Resultado - Inteligencia MUD*\n\nPontuacao Geral: ${total}/100\nNivel de Maturidade: ${level}\n\n${pillarText}\n\nFaca o seu teste em metodomud.com`;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const total = document.getElementById('total-score').textContent;
+    const level = document.getElementById('maturity-level').textContent;
+    const sorted = Object.entries(scores).sort(([,a],[,b]) => a - b).slice(0, 3).map(([k]) => k);
+
+    doc.setFontSize(18);
+    doc.text('Relatorio de Maturidade Empresarial', 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Empresa: ${registration.empresa || 'N/A'}`, 20, 35);
+    doc.text(`Responsavel: ${registration.nome || 'N/A'}`, 20, 43);
+    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 51);
+
+    doc.setFontSize(14);
+    doc.text(`Pontuacao Geral: ${total}/100`, 20, 65);
+    doc.text(`Nivel de Maturidade: ${level}`, 20, 74);
+
+    doc.setFontSize(12);
+    doc.text('Pontuacao por Pilar:', 20, 88);
+    let y = 96;
+    Object.entries(scores).forEach(([key, val]) => {
+      doc.text(`  ${pillarLabels[key]}: ${val * 10}/100`, 20, y);
+      y += 8;
+    });
+
+    y += 6;
+    doc.setFontSize(14);
+    doc.text('Principais Gargalos:', 20, y); y += 8;
+    doc.setFontSize(11);
+    sorted.forEach(k => {
+      const lines = doc.splitTextToSize(`${pillarLabels[k]}: ${gargalosMap[k]}`, 170);
+      doc.text(lines, 20, y); y += lines.length * 7;
+    });
+
+    y += 4;
+    doc.setFontSize(14);
+    doc.text('Acoes Recomendadas:', 20, y); y += 8;
+    doc.setFontSize(11);
+    sorted.forEach(k => {
+      const lines = doc.splitTextToSize(`${pillarLabels[k]}: ${acoesMap[k]}`, 170);
+      doc.text(lines, 20, y); y += lines.length * 7;
+    });
+
+    doc.save('MUD_Diagnostico_Empresarial.pdf');
+  }
+
+  function showExampleResult() {
+    scores.financeiro = 6; scores.compras = 4; scores.estoque = 3;
+    scores.vendas = 7; scores.marketing = 5; scores.pessoas = 4; scores.mentalidade = 6;
+    registration = { nome: 'Exemplo', empresa: 'Empresa Exemplo', email: '', whatsapp: '', setor: '', faturamento: '', colaboradores: '', desafio: '' };
+    showResults();
+  }
+
+  // Initialize Lucide icons + scroll animations
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animated');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+  });
+</script>
+</body>
+</html>

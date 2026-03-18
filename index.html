@@ -1577,16 +1577,17 @@
     // Helper: numbered list item with background
     function listItem(num, text, yPos, bgColor) {
       doc.setFillColor(...bgColor);
-      doc.roundedRect(20, yPos - 4, pw - 40, 12, 1, 1, 'F');
+      doc.roundedRect(20, yPos - 3, pw - 40, 10, 1, 1, 'F');
       doc.setTextColor(...gold);
-      doc.setFontSize(10);
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.text(`${num}.`, 25, yPos + 3);
       doc.setTextColor(60, 60, 60);
       doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
       const lines = doc.splitTextToSize(text, pw - 75);
       doc.text(lines, 35, yPos + 3);
-      return yPos + Math.max(14, lines.length * 12);
+      return yPos + Math.max(12, lines.length * 10);
     }
 
     // ── PAGE 1: HEADER ──
@@ -1617,13 +1618,13 @@
     doc.text(`Gerado em ${date}`, 15, 38);
 
     // ── SECTION 1: VISAO GERAL ──
-    let y = sectionHeader('1. Visao Geral da Empresa', 55);
+    let y = sectionHeader('1. Visao Geral da Empresa', 52);
 
     // Company info table
     doc.setFillColor(...lightBg);
-    doc.roundedRect(20, y, pw - 40, 42, 2, 2, 'F');
+    doc.roundedRect(20, y, pw - 40, 36, 2, 2, 'F');
     doc.setDrawColor(220, 220, 220);
-    doc.roundedRect(20, y, pw - 40, 42, 2, 2, 'S');
+    doc.roundedRect(20, y, pw - 40, 36, 2, 2, 'S');
 
     const fields = [
       ['Empresa:', registration.empresa || 'N/A'],
@@ -1633,48 +1634,48 @@
       ['Desafio Principal:', registration.desafio || 'N/A']
     ];
 
-    let fy = y + 8;
+    let fy = y + 7;
     fields.forEach(([label, value]) => {
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
+      doc.setFontSize(8);
       doc.setTextColor(60, 60, 60);
       doc.text(label, 25, fy);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(80, 80, 80);
-      doc.text(value, 70, fy);
-      fy += 7;
+      doc.text(value, 65, fy);
+      fy += 6;
     });
 
-    y += 50;
+    y += 42;
 
     // ── SECTION 2: PAINEL DE MATURIDADE ──
     y = sectionHeader('2. Painel de Maturidade', y);
 
     // Score circle
-    const cx = 50, cy = y + 22;
+    const cx = 45, cy = y + 16;
     doc.setDrawColor(...gold);
     doc.setLineWidth(1.5);
-    doc.circle(cx, cy, 16);
+    doc.circle(cx, cy, 14);
     doc.setTextColor(...navy);
-    doc.setFontSize(24);
+    doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
     doc.text(`${total}`, cx, cy - 2, { align: 'center' });
-    doc.setFontSize(8);
+    doc.setFontSize(7);
     doc.setTextColor(...grey);
     doc.setFont('helvetica', 'normal');
-    doc.text('de 100', cx, cy + 5, { align: 'center' });
+    doc.text('de 100', cx, cy + 4, { align: 'center' });
 
     // Level text
     doc.setTextColor(...grey);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text('Nivel de Maturidade', 80, cy - 5);
+    doc.text('Nivel de Maturidade', 72, cy - 4);
     doc.setTextColor(...navy);
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text(level, 80, cy + 4);
+    doc.text(level, 72, cy + 4);
 
-    y += 48;
+    y += 36;
 
     // Pillar bars
     const barX = 55, barW = pw - 80;
@@ -1700,10 +1701,10 @@
       doc.setTextColor(60, 60, 60);
       doc.text(`${pct}`, pw - 20, y, { align: 'right' });
 
-      y += 10;
+      y += 9;
     });
 
-    y += 6;
+    y += 4;
 
     // ── SECTION 3: BENCHMARK ──
     y = sectionHeader('3. Comparativo de Benchmark', y);
@@ -1711,27 +1712,27 @@
     // Two boxes
     const boxW = (pw - 50) / 2;
     doc.setFillColor(...lightBg);
-    doc.roundedRect(20, y, boxW, 25, 2, 2, 'F');
+    doc.roundedRect(20, y, boxW, 22, 2, 2, 'F');
     doc.setDrawColor(220, 220, 220);
-    doc.roundedRect(20, y, boxW, 25, 2, 2, 'S');
+    doc.roundedRect(20, y, boxW, 22, 2, 2, 'S');
 
     doc.setFillColor(...lightBg);
-    doc.roundedRect(25 + boxW, y, boxW, 25, 2, 2, 'F');
-    doc.roundedRect(25 + boxW, y, boxW, 25, 2, 2, 'S');
+    doc.roundedRect(25 + boxW, y, boxW, 22, 2, 2, 'F');
+    doc.roundedRect(25 + boxW, y, boxW, 22, 2, 2, 'S');
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
+    doc.setFontSize(7);
     doc.setTextColor(...grey);
-    doc.text('Media do seu porte', 20 + boxW / 2, y + 8, { align: 'center' });
-    doc.text('Sua pontuacao', 25 + boxW + boxW / 2, y + 8, { align: 'center' });
+    doc.text('Media do seu porte', 20 + boxW / 2, y + 7, { align: 'center' });
+    doc.text('Sua pontuacao', 25 + boxW + boxW / 2, y + 7, { align: 'center' });
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(20);
+    doc.setFontSize(18);
     doc.setTextColor(...navy);
-    doc.text('45', 20 + boxW / 2, y + 20, { align: 'center' });
-    doc.text(`${total}`, 25 + boxW + boxW / 2, y + 20, { align: 'center' });
+    doc.text('45', 20 + boxW / 2, y + 18, { align: 'center' });
+    doc.text(`${total}`, 25 + boxW + boxW / 2, y + 18, { align: 'center' });
 
-    y += 30;
+    y += 26;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(80, 80, 80);
@@ -1762,21 +1763,21 @@
     sorted.forEach((k, i) => {
       y = listItem(i + 1, gargalosMap[k], y, warmBg);
     });
-    y += 6;
+    y += 4;
 
     // ── SECTION 5: OPORTUNIDADES ──
     y = sectionHeader('5. Oportunidades de Crescimento', y);
     sorted.forEach((k, i) => {
       y = listItem(i + 1, oportunidadesMap[k], y, greenBg);
     });
-    y += 6;
+    y += 4;
 
     // ── SECTION 6: ACOES ──
     y = sectionHeader('6. Acoes Prioritarias', y);
     sorted.forEach((k, i) => {
       y = listItem(i + 1, acoesMap[k], y, greenBg);
     });
-    y += 6;
+    y += 4;
 
     // ── SECTION 7: RESUMO ──
     y = sectionHeader('7. Resumo Estrategico', y);

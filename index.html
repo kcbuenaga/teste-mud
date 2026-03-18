@@ -1545,46 +1545,260 @@
   function downloadPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    const total = document.getElementById('total-score').textContent;
+    const pw = doc.internal.pageSize.getWidth();
+    const total = parseInt(document.getElementById('total-score').textContent);
     const level = document.getElementById('maturity-level').textContent;
     const sorted = Object.entries(scores).sort(([,a],[,b]) => a - b).slice(0, 3).map(([k]) => k);
+    const date = new Date().toLocaleDateString('pt-BR');
 
-    doc.setFontSize(18);
-    doc.text('Relatorio de Maturidade Empresarial', 20, 20);
+    const navy = [30, 41, 59];
+    const gold = [201, 168, 76];
+    const goldLight = [232, 201, 122];
+    const white = [255, 255, 255];
+    const grey = [120, 120, 120];
+    const lightBg = [245, 245, 245];
+    const greenBg = [240, 248, 240];
+    const warmBg = [255, 248, 240];
+
+    // Helper: section header bar
+    function sectionHeader(title, yPos) {
+      doc.setFillColor(...navy);
+      doc.roundedRect(15, yPos, pw - 30, 10, 1, 1, 'F');
+      doc.setFillColor(...gold);
+      doc.roundedRect(15, yPos, 3, 10, 1, 1, 'F');
+      doc.setTextColor(...white);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, 22, yPos + 7);
+      doc.setTextColor(0, 0, 0);
+      return yPos + 16;
+    }
+
+    // Helper: numbered list item with background
+    function listItem(num, text, yPos, bgColor) {
+      doc.setFillColor(...bgColor);
+      doc.roundedRect(20, yPos - 4, pw - 40, 12, 1, 1, 'F');
+      doc.setTextColor(...gold);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${num}.`, 25, yPos + 3);
+      doc.setTextColor(60, 60, 60);
+      doc.setFont('helvetica', 'normal');
+      const lines = doc.splitTextToSize(text, pw - 75);
+      doc.text(lines, 35, yPos + 3);
+      return yPos + Math.max(14, lines.length * 12);
+    }
+
+    // ── PAGE 1: HEADER ──
+    // Navy header background
+    doc.setFillColor(...navy);
+    doc.rect(0, 0, pw, 45, 'F');
+    // Gold line
+    doc.setFillColor(...gold);
+    doc.rect(0, 45, pw, 2, 'F');
+
+    // Header text
+    doc.setTextColor(...goldLight);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('INTELIGENCIA', 15, 18);
+    doc.setTextColor(...white);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('MUD', 55, 18);
+
+    doc.setTextColor(200, 200, 200);
     doc.setFontSize(12);
-    doc.text(`Empresa: ${registration.empresa || 'N/A'}`, 20, 35);
-    doc.text(`Responsavel: ${registration.nome || 'N/A'}`, 20, 43);
-    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 51);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Diagnostico de Maturidade Empresarial', 15, 30);
 
-    doc.setFontSize(14);
-    doc.text(`Pontuacao Geral: ${total}/100`, 20, 65);
-    doc.text(`Nivel de Maturidade: ${level}`, 20, 74);
+    doc.setTextColor(150, 150, 150);
+    doc.setFontSize(9);
+    doc.text(`Gerado em ${date}`, 15, 38);
 
-    doc.setFontSize(12);
-    doc.text('Pontuacao por Pilar:', 20, 88);
-    let y = 96;
+    // ── SECTION 1: VISAO GERAL ──
+    let y = sectionHeader('1. Visao Geral da Empresa', 55);
+
+    // Company info table
+    doc.setFillColor(...lightBg);
+    doc.roundedRect(20, y, pw - 40, 42, 2, 2, 'F');
+    doc.setDrawColor(220, 220, 220);
+    doc.roundedRect(20, y, pw - 40, 42, 2, 2, 'S');
+
+    const fields = [
+      ['Empresa:', registration.empresa || 'N/A'],
+      ['Setor:', registration.setor || 'N/A'],
+      ['Faturamento:', registration.faturamento || 'N/A'],
+      ['Colaboradores:', registration.colaboradores || 'N/A'],
+      ['Desafio Principal:', registration.desafio || 'N/A']
+    ];
+
+    let fy = y + 8;
+    fields.forEach(([label, value]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(60, 60, 60);
+      doc.text(label, 25, fy);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
+      doc.text(value, 70, fy);
+      fy += 7;
+    });
+
+    y += 50;
+
+    // ── SECTION 2: PAINEL DE MATURIDADE ──
+    y = sectionHeader('2. Painel de Maturidade', y);
+
+    // Score circle
+    const cx = 50, cy = y + 22;
+    doc.setDrawColor(...gold);
+    doc.setLineWidth(1.5);
+    doc.circle(cx, cy, 16);
+    doc.setTextColor(...navy);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${total}`, cx, cy - 2, { align: 'center' });
+    doc.setFontSize(8);
+    doc.setTextColor(...grey);
+    doc.setFont('helvetica', 'normal');
+    doc.text('de 100', cx, cy + 5, { align: 'center' });
+
+    // Level text
+    doc.setTextColor(...grey);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Nivel de Maturidade', 80, cy - 5);
+    doc.setTextColor(...navy);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text(level, 80, cy + 4);
+
+    y += 48;
+
+    // Pillar bars
+    const barX = 55, barW = pw - 80;
     Object.entries(scores).forEach(([key, val]) => {
-      doc.text(`  ${pillarLabels[key]}: ${val * 10}/100`, 20, y);
-      y += 8;
+      const pct = val * 10;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(60, 60, 60);
+      doc.text(pillarLabels[key], 20, y);
+
+      // Background bar
+      doc.setFillColor(220, 220, 220);
+      doc.roundedRect(barX, y - 3, barW, 5, 1, 1, 'F');
+
+      // Filled bar
+      if (pct > 0) {
+        doc.setFillColor(...gold);
+        doc.roundedRect(barX, y - 3, barW * (pct / 100), 5, 1, 1, 'F');
+      }
+
+      // Score value
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(60, 60, 60);
+      doc.text(`${pct}`, pw - 20, y, { align: 'right' });
+
+      y += 10;
     });
 
     y += 6;
-    doc.setFontSize(14);
-    doc.text('Principais Gargalos:', 20, y); y += 8;
-    doc.setFontSize(11);
-    sorted.forEach(k => {
-      const lines = doc.splitTextToSize(`${pillarLabels[k]}: ${gargalosMap[k]}`, 170);
-      doc.text(lines, 20, y); y += lines.length * 7;
-    });
 
-    y += 4;
-    doc.setFontSize(14);
-    doc.text('Acoes Recomendadas:', 20, y); y += 8;
-    doc.setFontSize(11);
-    sorted.forEach(k => {
-      const lines = doc.splitTextToSize(`${pillarLabels[k]}: ${acoesMap[k]}`, 170);
-      doc.text(lines, 20, y); y += lines.length * 7;
+    // ── SECTION 3: BENCHMARK ──
+    y = sectionHeader('3. Comparativo de Benchmark', y);
+
+    // Two boxes
+    const boxW = (pw - 50) / 2;
+    doc.setFillColor(...lightBg);
+    doc.roundedRect(20, y, boxW, 25, 2, 2, 'F');
+    doc.setDrawColor(220, 220, 220);
+    doc.roundedRect(20, y, boxW, 25, 2, 2, 'S');
+
+    doc.setFillColor(...lightBg);
+    doc.roundedRect(25 + boxW, y, boxW, 25, 2, 2, 'F');
+    doc.roundedRect(25 + boxW, y, boxW, 25, 2, 2, 'S');
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(...grey);
+    doc.text('Media do seu porte', 20 + boxW / 2, y + 8, { align: 'center' });
+    doc.text('Sua pontuacao', 25 + boxW + boxW / 2, y + 8, { align: 'center' });
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(...navy);
+    doc.text('45', 20 + boxW / 2, y + 20, { align: 'center' });
+    doc.text(`${total}`, 25 + boxW + boxW / 2, y + 20, { align: 'center' });
+
+    y += 30;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    if (total >= 45) {
+      doc.text('Sua empresa esta ', 20, y);
+      doc.setTextColor(40, 160, 80);
+      doc.setFont('helvetica', 'bold');
+      doc.text('acima da media', 59, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
+      doc.text(' em relacao a empresas do mesmo porte.', 86, y);
+    } else {
+      doc.text('Sua empresa esta ', 20, y);
+      doc.setTextColor(220, 60, 60);
+      doc.setFont('helvetica', 'bold');
+      doc.text('abaixo da media', 59, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
+      doc.text(' em relacao a empresas do mesmo porte.', 88, y);
+    }
+
+    // ── PAGE 2 ──
+    doc.addPage();
+    y = 20;
+
+    // ── SECTION 4: GARGALOS ──
+    y = sectionHeader('4. Principais Gargalos', y);
+    sorted.forEach((k, i) => {
+      y = listItem(i + 1, gargalosMap[k], y, warmBg);
     });
+    y += 6;
+
+    // ── SECTION 5: OPORTUNIDADES ──
+    y = sectionHeader('5. Oportunidades de Crescimento', y);
+    sorted.forEach((k, i) => {
+      y = listItem(i + 1, oportunidadesMap[k], y, greenBg);
+    });
+    y += 6;
+
+    // ── SECTION 6: ACOES ──
+    y = sectionHeader('6. Acoes Prioritarias', y);
+    sorted.forEach((k, i) => {
+      y = listItem(i + 1, acoesMap[k], y, greenBg);
+    });
+    y += 6;
+
+    // ── SECTION 7: RESUMO ──
+    y = sectionHeader('7. Resumo Estrategico', y);
+    const summaryPillars = sorted.map(k => pillarLabels[k].toLowerCase()).join(', ');
+    const summaryText = `Com base no diagnostico realizado, sua empresa apresenta oportunidades claras de melhoria em ${summaryPillars}. Priorizar acoes nesses pilares tende a gerar maior previsibilidade de crescimento e melhor eficiencia operacional.`;
+
+    doc.setFillColor(250, 248, 240);
+    doc.roundedRect(20, y, pw - 40, 30, 2, 2, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    const summaryLines = doc.splitTextToSize(summaryText, pw - 50);
+    doc.text(summaryLines, 25, y + 8);
+
+    // Footer
+    const footerY = doc.internal.pageSize.getHeight() - 15;
+    doc.setFillColor(...navy);
+    doc.rect(0, footerY - 2, pw, 20, 'F');
+    doc.setTextColor(...white);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Inteligencia MUD \u2022 Diagnostico de Maturidade Empresarial', pw / 2, footerY + 5, { align: 'center' });
 
     doc.save('MUD_Diagnostico_Empresarial.pdf');
   }
